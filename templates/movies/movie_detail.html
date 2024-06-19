@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5" style="max-width: 1060px;">
+    <h1>{{ movie.title }}</h1>
+    <hr>
+    <p><strong>Description:</strong> {{ movie.description }}</p>
+    <p><strong>Release Year:</strong> {{ movie.release_year }}</p>
+    <p><strong>Duration:</strong> {{ movie.duration_minutes }} minutes</p>
+    <p><strong>Genre:</strong> {{ movie.genre.name }}</p>
+    <p><strong>Directors:</strong>
+        {% for director in movie.directors.all %}
+            {{ director.first_name }} {{ director.last_name }}{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+    </p>
+    <a href="{% url 'movie_edit' movie.pk %}" class="btn btn-secondary">Edit</a>
+    <a href="{% url 'movie_delete' movie.pk %}" class="btn btn-danger">Delete</a>
+    
+    <hr>
+    <h2>Cast</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Actor</th>
+                <th>Role</th>
+                <th class="table-actions">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cast in movie.cast_set.all %}
+                <tr>
+                    <td>{{ cast.person.first_name }} {{ cast.person.last_name }}</td>
+                    <td>{{ cast.role_name }}</td>
+                    <td class="table-actions">
+                        <a href="{% url 'cast_edit' cast.pk %}" class="btn btn-sm btn-primary">Edit</a>
+                        <a href="{% url 'cast_delete' cast.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'cast_add' %}?movie={{ movie.pk }}" class="btn btn-success mt-3">Add Cast</a>
+    
+    <hr>
+    <h2>Awards</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Award</th>
+                <th>Category</th>
+                <th class="table-actions">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for award in movie.movieaward_set.all %}
+                <tr>
+                    <td>{{ award.award.name }}</td>
+                    <td>{{ award.category }}</td>
+                    <td class="table-actions">
+                        <a href="{% url 'movie_award_delete' award.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'movie_award_add' %}?movie={{ movie.pk }}" class="btn btn-success">Add Award</a>
+    
+    <hr>
+    <h2>Reviews</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Rating</th>
+                <th>Text</th>
+                <th>Date</th>
+                <th class="table-actions">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for review in reviews %}
+                <tr>
+                    <td>{{ review.user.username }}</td>
+                    <td>{{ review.rating }} ⭐</td>
+                    <td class="review-text">{{ review.text }}</td>
+                    <td>{{ review.created_at|date:"Y-m-d H:i" }}</td>
+                    <td class="table-actions">
+                        <a href="{% url 'review_edit' review.pk %}" class="btn btn-sm btn-primary">Edit</a>
+                        <a href="{% url 'review_delete' review.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'review_add' %}?movie={{ movie.pk }}" class="btn btn-success">Add Review</a>
+</div>
+{% endblock %}

@@ -1,0 +1,47 @@
+<header class="page-header">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-between">
+        <a class="navbar-brand" href="{% url 'home' %}">MOVIES COLLECTION</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'movie_list' %}">Movies</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'genre_list' %}">Genres</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'person_list' %}?role=actor">Actors</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'person_list' %}?role=director">Directors</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'award_list' %}">Awards</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'review_list' %}">Reviews</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <span class="nav-link">Hello, {{ user }}!</span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'register' %}">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+</header>

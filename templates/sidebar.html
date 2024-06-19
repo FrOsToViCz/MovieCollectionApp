@@ -1,0 +1,11 @@
+<div class="bg-light p-3">
+    <h5>Navigation</h5>
+    <div class="list-group">
+        <a href="{% url 'movie_list' %}" class="list-group-item list-group-item-action">Movies</a>
+        <a href="{% url 'genre_list' %}" class="list-group-item list-group-item-action">Genres</a>
+        <a href="{% url 'person_list' %}?role=actor" class="list-group-item list-group-item-action">Actors</a>
+        <a href="{% url 'person_list' %}?role=director" class="list-group-item list-group-item-action">Directors</a>
+        <a href="{% url 'award_list' %}" class="list-group-item list-group-item-action">Awards</a>
+        <a href="{% url 'review_list' %}" class="list-group-item list-group-item-action">Reviews</a>
+    </div>
+</div>
