@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5" style="max-width: 400px">
+    <h2>Register User</h2>
+    <h3>{{ error }}</h3>
+    <form method="POST">
+        <p><input type="text" name="username" placeholder="username"></p>
+        <p><input type="password" name="password" placeholder="password"></p>
+        <p><input type="password" name="password2" placeholder="repeat password"></p>
+        {% csrf_token %}
+        <button type="submit" class="btn btn-mt btn-primary">Create</button>
+    </form>
+</div>
+{% endblock %}
