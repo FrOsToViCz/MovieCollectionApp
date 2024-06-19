@@ -16,7 +16,7 @@ class CreateUserView(View):
             u = User(username=username)
             u.set_password(password)
             u.save()
-            return redirect('base')
+            return redirect('home')
         return render(request, 'accounts/create_user.html', {'error': 'Passwords do not match'})
 
 
@@ -29,7 +29,7 @@ class LoginView(View):
         password = request.POST.get('password')
         user = authenticate(username=username, password=password)
         if user is not None:
-            redirect_url = request.GET.get('next', 'base')
+            redirect_url = request.GET.get('next', 'home')
             login(request, user)
             return redirect(redirect_url)
         else:
@@ -39,4 +39,4 @@ class LoginView(View):
 class LogoutView(View):
     def get(self, request):
         logout(request)
-        return redirect('base')
+        return redirect('home')

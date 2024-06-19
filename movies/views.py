@@ -138,12 +138,12 @@ class PersonListView(ListView):
         queryset = Person.objects.all()
         if role:
             if role == 'actor':
-                return Person.objects.filter(role__in=['actor', 'both'])
+                queryset = Person.objects.filter(role__in=['actor', 'both'])
             elif role == 'director':
-                return Person.objects.filter(role__in=['director', 'both'])
+                queryset = Person.objects.filter(role__in=['director', 'both'])
         if query:
             queryset = queryset.filter(first_name__icontains=query) | queryset.filter(last_name__icontains=query)
-        return queryset
+        return queryset.order_by('last_name')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
