@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ award.name }}</h1>
+<h2>Movies</h2>
+<ul>
+    {% for movie_award in award.movieaward_set.all %}
+        <li>{{ movie_award.movie.title }} - {{ movie_award.category }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}

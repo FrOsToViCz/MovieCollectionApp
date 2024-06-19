@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Genres</h1>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th class="table-actions">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for genre in genres %}
+            <tr>
+                <td>{{ genre.name }}</td>
+                <td class="table-actions">
+                    <a href="{% url 'genre_edit' genre.pk %}" class="btn btn-sm btn-primary">Edit</a>
+                    <a href="{% url 'genre_delete' genre.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{% url 'genre_add' %}" class="btn btn-success">Add Genre</a>
+{% endblock %}

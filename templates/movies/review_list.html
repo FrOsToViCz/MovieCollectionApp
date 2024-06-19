@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Reviews</h1>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>User</th>
+            <th>Movie</th>
+            <th>Rating</th>
+            <th>Text</th>
+            <th>Date</th>
+            <th class="table-actions">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for review in reviews %}
+            <tr>
+                <td>{{ review.user.username }}</td>
+                <td><a href="{% url 'movie_detail' review.movie.pk %}">{{ review.movie.title }}</a></td>
+                <td>{{ review.rating }} ⭐</td>
+                <td class="review-text">{{ review.text }}</td>
+                <td>{{ review.created_at|date:"Y-m-d H:i" }}</td>
+                <td class="table-actions">
+                    <a href="{% url 'review_edit' review.pk %}" class="btn btn-sm btn-primary">Edit</a>
+                    <a href="{% url 'review_delete' review.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{% url 'review_add' %}" class="btn btn-success">Add Review</a>
+{% endblock %}

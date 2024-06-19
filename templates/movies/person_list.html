@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Persons</h1>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Role</th>
+            <th class="table-actions">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for person in persons %}
+            <tr>
+                <td><a href="{% url 'person_detail' person.pk %}">{{ person.first_name }} {{ person.last_name }}</a></td>
+                <td>{{ person.display_role }}</td>
+                <td class="table-actions">
+                    <a href="{% url 'person_edit' person.pk %}" class="btn btn-sm btn-primary">Edit</a>
+                    <a href="{% url 'person_delete' person.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{% url 'person_add' %}" class="btn btn-success">Add Person</a>
+{% endblock %}

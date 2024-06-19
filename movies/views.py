@@ -1,10 +1,10 @@
 import logging
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
-from movies.forms import MovieForm, PersonForm, GenreForm, CastForm
-from movies.models import Movie, Review, Person, Genre, Cast
+from movies.forms import MovieForm, PersonForm, GenreForm, CastForm, ReviewForm, AwardForm, MovieAwardForm
+from movies.models import Movie, Review, Person, Genre, Cast, Award, MovieAward
 
 
 class HomeView(TemplateView):
@@ -181,3 +181,110 @@ class PersonDetailView(DetailView):
     model = Person
     template_name = 'movies/person_detail.html'
     context_object_name = 'person'
+
+
+class AwardListView(ListView):
+    model = Award
+    template_name = 'movies/award_list.html'
+    context_object_name = 'awards'
+
+
+class AwardCreateView(LoginRequiredMixin, CreateView):
+    model = Award
+    form_class = AwardForm
+    template_name = 'movies/award_form.html'
+    success_url = reverse_lazy('award_list')
+
+
+class AwardUpdateView(LoginRequiredMixin, UpdateView):
+    model = Award
+    form_class = AwardForm
+    template_name = 'movies/award_form.html'
+    success_url = reverse_lazy('award_list')
+
+
+class AwardDeleteView(LoginRequiredMixin, DeleteView):
+    model = Award
+    template_name = 'movies/award_confirm_delete.html'
+    success_url = reverse_lazy('award_list')
+
+
+class AwardDetailView(DetailView):
+    model = Award
+    template_name = 'movies/award_detail.html'
+    context_object_name = 'award'
+
+
+class MovieAwardCreateView(LoginRequiredMixin, CreateView):
+    model = MovieAward
+    form_class = MovieAwardForm
+    template_name = 'movies/movieaward_form.html'
+
+    def get_initial(self):
+        initial = super().get_initial()
+        movie_id = self.request.GET.get('movie')
+        if movie_id:
+            initial['movie'] = get_object_or_404(Movie, pk=movie_id)
+        return initial
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        movie_id = self.request.GET.get('movie')
+        if movie_id:
+            context['movie'] = get_object_or_404(Movie, pk=movie_id)
+        return context
+
+    def form_valid(self, form):
+        movie_id = self.request.GET.get('movie')
+        form.instance.movie = get_object_or_404(Movie, pk=movie_id)
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('movie_detail', kwargs={'pk': self.object.movie.pk})
+
+
+class MovieAwardDeleteView(LoginRequiredMixin, DeleteView):
+    model = MovieAward
+    template_name = 'movies/movieaward_confirm_delete.html'
+    success_url = reverse_lazy('movie_list')
+
+    def get_success_url(self):
+        movie_pk = self.get_object().movie.pk
+        logger.debug(f"Redirecting to movie detail for movie ID: {movie_pk}")
+        return reverse_lazy('movie_detail', kwargs={'pk': movie_pk})
+
+
+class ReviewListView(ListView):
+    model = Review
+    template_name = 'movies/review_list.html'
+    context_object_name = 'reviews'
+    ordering = ['-created_at']
+
+
+class ReviewCreateView(LoginRequiredMixin, CreateView):
+    model = Review
+    form_class = ReviewForm
+    template_name = 'movies/review_form.html'
+    success_url = reverse_lazy('review_list')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+
+class ReviewUpdateView(LoginRequiredMixin, UpdateView):
+    model = Review
+    form_class = ReviewForm
+    template_name = 'movies/review_form.html'
+    success_url = reverse_lazy('review_list')
+
+
+class ReviewDeleteView(LoginRequiredMixin, DeleteView):
+    model = Review
+    template_name = 'movies/review_confirm_delete.html'
+    success_url = reverse_lazy('review_list')
