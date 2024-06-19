@@ -11,9 +11,13 @@ class MovieForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Opis...'}),
             'release_year': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Rok wydania'}),
             'duration_minutes': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Czas trwania'}),
-            'genre': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Gatunek'}),
-            'directors': forms.SelectMultiple(attrs={'class': 'form-control'}),
+            'genre': forms.Select(attrs={'class': 'form-control'}),
+            'directors': forms.SelectMultiple(attrs={'class': 'form-control', 'placeholder': 'Wybierz reżyserów'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super(MovieForm, self).__init__(*args, **kwargs)
+        self.fields['genre'].empty_label = 'Gatunek'
 
 
 class GenreForm(forms.ModelForm):

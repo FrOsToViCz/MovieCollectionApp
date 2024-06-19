@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Persons</h1>
+<h1 class="d-flex justify-content-between">
+    Persons
+    <form method="get" class="form-inline">
+        <input type="text" name="q" value="{{ search_query }}" class="form-control mr-sm-2" placeholder="Search persons">
+        <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Search</button>
+    </form>
+</h1>
 <table class="table table-striped">
     <thead>
         <tr>

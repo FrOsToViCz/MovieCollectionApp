@@ -23,10 +23,22 @@ class MovieListView(ListView):
     context_object_name = 'movies'
 
     def get_queryset(self):
-        queryset = self.request.GET.get('q')
-        if queryset:
-            return Movie.objects.filter(title__icontains=queryset)
-        return Movie.objects.all()
+        queryset = Movie.objects.all()
+        query = self.request.GET.get('q')
+        sort_by = self.request.GET.get('sort_by')
+
+        if query:
+            queryset = queryset.filter(title__icontains=query)
+
+        if sort_by == 'release_year':
+            queryset = queryset.order_by('release_year')
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_query'] = self.request.GET.get('q', '')
+        return context
 
 
 class MovieDetailView(DetailView):
@@ -147,6 +159,8 @@ class PersonListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['search_query'] = self.request.GET.get('q', '')
+        context['role_query'] = self.request.GET.get('role', '')
         for person in context['persons']:
             if person.role == 'both':
                 person.display_role = 'Actor, Director'
