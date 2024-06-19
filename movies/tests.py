@@ -1,6 +1,5 @@
 from django.urls import reverse
 import pytest
-
 from movies.models import Person
 
 
