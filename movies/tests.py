@@ -1,6 +1,6 @@
 from django.urls import reverse
 import pytest
-from movies.models import Person
+from movies.models import Person, Movie
 
 
 @pytest.mark.django_db
@@ -22,19 +22,21 @@ def test_movie_list_view(client, movie):
 
 
 @pytest.mark.django_db
-def test_person_list_view_ordering(client):
-    person1 = Person.objects.create(first_name='John', last_name='Zan', birth_date='1990-01-01', role='actor')
-    person2 = Person.objects.create(first_name='Mick', last_name='Dot', birth_date='1990-01-01', role='director')
-    person3 = Person.objects.create(first_name='Stan', last_name='Key', birth_date='1990-01-01', role='actor')
-
-    url = reverse('person_list')
+def test_movie_list_view_sorting_by_release_year(client, person, genre):
+    movie1 = Movie.objects.create(title='Movie A', description='Test', release_year=2005, duration_minutes=120, genre=genre)
+    movie1.directors.add(person)
+    movie2 = Movie.objects.create(title='Movie B', description='Test', release_year=1965, duration_minutes=120, genre=genre)
+    movie2.directors.add(person)
+    movie3 = Movie.objects.create(title='Movie C', description='Test', release_year=1990, duration_minutes=120, genre=genre)
+    movie3.directors.add(person)
+    url = reverse('movie_list') + '?sort_by=release_year'
     response = client.get(url)
     assert response.status_code == 200
-
-    persons = response.context['persons']
-    assert persons[0].last_name == 'Dot'
-    assert persons[1].last_name == 'Key'
-    assert persons[2].last_name == 'Zan'
+    assert 'movies/movie_list.html' in [t.name for t in response.templates]
+    movies = response.context['movies']
+    assert movies[0].release_year == 1965
+    assert movies[1].release_year == 1990
+    assert movies[2].release_year == 2005
 
 
 @pytest.mark.django_db
@@ -164,6 +166,22 @@ def test_person_list_view(client, person):
     assert response.status_code == 200
     assert 'movies/person_list.html' in [t.name for t in response.templates]
     assert person.first_name in response.content.decode()
+
+
+@pytest.mark.django_db
+def test_person_list_view_ordering(client):
+    person1 = Person.objects.create(first_name='John', last_name='Zan', birth_date='1990-01-01', role='actor')
+    person2 = Person.objects.create(first_name='Mick', last_name='Dot', birth_date='1990-01-01', role='director')
+    person3 = Person.objects.create(first_name='Stan', last_name='Key', birth_date='1990-01-01', role='actor')
+
+    url = reverse('person_list')
+    response = client.get(url)
+    assert response.status_code == 200
+
+    persons = response.context['persons']
+    assert persons[0].last_name == 'Dot'
+    assert persons[1].last_name == 'Key'
+    assert persons[2].last_name == 'Zan'
 
 
 @pytest.mark.django_db
