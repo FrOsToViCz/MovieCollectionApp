@@ -23,11 +23,14 @@ def test_movie_list_view(client, movie):
 
 @pytest.mark.django_db
 def test_movie_list_view_sorting_by_release_year(client, person, genre):
-    movie1 = Movie.objects.create(title='Movie A', description='Test', release_year=2005, duration_minutes=120, genre=genre)
+    movie1 = Movie.objects.create(title='Movie A', description='Test', release_year=2005,
+                                  duration_minutes=120, genre=genre)
     movie1.directors.add(person)
-    movie2 = Movie.objects.create(title='Movie B', description='Test', release_year=1965, duration_minutes=120, genre=genre)
+    movie2 = Movie.objects.create(title='Movie B', description='Test', release_year=1965, duration_minutes=120,
+                                  genre=genre)
     movie2.directors.add(person)
-    movie3 = Movie.objects.create(title='Movie C', description='Test', release_year=1990, duration_minutes=120, genre=genre)
+    movie3 = Movie.objects.create(title='Movie C', description='Test', release_year=1990, duration_minutes=120,
+                                  genre=genre)
     movie3.directors.add(person)
     url = reverse('movie_list') + '?sort_by=release_year'
     response = client.get(url)
